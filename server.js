@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
@@ -6,12 +5,15 @@ const dbConfig = require("./config/database"); // 匯入資料庫設定
 const cheerio = require("cheerio");
 
 const app = express();
+
+// 直接設定 CORS 來源
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+    origin: "https://intro.selfpalette.idv.tw",
     credentials: true,
   })
 );
+
 app.use(express.json());
 
 // 根路徑
@@ -93,11 +95,11 @@ app.get("/api/projects", async (req, res) => {
 });
 
 //啟動伺服器
-const port = process.env.PORT || 3001;
+const port = 5000; // 直接設定 port，或者你網域商指定的 port
 
 app.listen(port, () => {
-  console.log(`後端API運行在 http://localhost:${port}`);
-  console.log(`環境: ${process.env.NODE_ENV || "development"}`);
+  console.log(`後端API運行在 port ${port}`);
+  console.log("環境: production"); // 直接寫死
   console.log("資料庫: selfpalette_projects");
   console.log("資料表: projects");
 });

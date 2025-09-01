@@ -1,10 +1,10 @@
 const mysql = require("mysql2/promise");
 
 const dbConfig = {
-  host: process.env.DB_HOST || "localhost",
-  user: process.env.DB_USER || "your_username",
-  password: process.env.DB_PASSWORD || "your_password",
-  database: process.env.DB_NAME || "selfpalette_projects",
+  host: "localhost", // 或者你的資料庫主機位址
+  user: "selfpalette_projects_user",
+  password: ",v@WCmoSsnG=F9@p",
+  database: "selfpalette_projects",
 };
 
 module.exports = dbConfig;
