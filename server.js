@@ -1,21 +1,17 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
 const dbConfig = require("./config/database"); // 匯入資料庫設定
 const cheerio = require("cheerio");
-
 const app = express();
-
-// 直接設定 CORS 來源
 app.use(
   cors({
-    origin: "https://intro.selfpalette.idv.tw",
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     credentials: true,
   })
 );
-
 app.use(express.json());
-
 // 根路徑
 app.get("/", (req, res) => {
   res.json({
@@ -24,37 +20,27 @@ app.get("/", (req, res) => {
     table: "projects",
   });
 });
-
 // GET - 讀取所有專案 (修正版本)
 app.get("/api/projects", async (req, res) => {
   let connection;
   try {
     connection = await mysql.createConnection(dbConfig);
-
     const [rows] = await connection.execute(
       "SELECT id, title, description, details, image, url, created_date FROM projects ORDER BY created_date DESC"
-    );
-
-    // 處理不同格式的url欄位
+    ); // 處理不同格式的url欄位
     const projects = rows.map((row) => {
-      let urlArray = [];
-
-      // 在map函數中
+      let urlArray = []; // 在map函數中
       if (row.url && row.url.includes("<")) {
         const $ = cheerio.load(row.url);
         const links = [];
-
         $("a").each((i, element) => {
           links.push({
             url: $(element).attr("href"),
             text: $(element).text(),
           });
         });
-
         urlArray = links;
-      }
-
-      //格式化日期
+      } //格式化日期
       let formattedDate = null;
       if (row.created_date) {
         if (typeof row.created_date === "string") {
@@ -65,7 +51,6 @@ app.get("/api/projects", async (req, res) => {
           formattedDate = row.created_date.toISOString().split("T")[0];
         }
       }
-
       return {
         id: row.id,
         title: row.title,
@@ -79,7 +64,6 @@ app.get("/api/projects", async (req, res) => {
           : new Date().getFullYear(),
       };
     });
-
     res.json(projects);
   } catch (error) {
     console.error("讀取專案失敗:", error);
@@ -93,13 +77,11 @@ app.get("/api/projects", async (req, res) => {
     }
   }
 });
-
 //啟動伺服器
-const port = 5000; // 直接設定 port，或者你網域商指定的 port
-
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
-  console.log(`後端API運行在 port ${port}`);
-  console.log("環境: production"); // 直接寫死
+  console.log(`後端API運行在 http://localhost:${port}`);
+  console.log(`環境: ${process.env.NODE_ENV || "development"}`);
   console.log("資料庫: selfpalette_projects");
   console.log("資料表: projects");
 });
