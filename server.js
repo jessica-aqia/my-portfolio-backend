@@ -7,14 +7,13 @@ const app = express();
 // 中間件設定
 app.use(
   cors({
-    origin: "*", // 允許所有來源，或改成你的前端網址
+    origin: "https://intro.selfpalette.idv.tw/",
     credentials: true,
   })
 );
 
 app.use(express.json());
 
-// 假資料 - 修改成真實可用的 URL
 const fakeProjects = [
   {
     id: 1,
