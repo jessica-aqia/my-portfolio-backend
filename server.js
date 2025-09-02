@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const mysql = require("mysql2/promise");
 
 const app = express();
 
@@ -12,115 +13,195 @@ app.use(
 
 app.use(express.json());
 
+// 優化的資料庫設定
+const dbConfig = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 3306,
+  // 增加穩定性設定
+  connectTimeout: 15000, // 15秒連線超時
+  acquireTimeout: 15000, // 15秒取得連線超時
+  timeout: 15000, // 15秒查詢超時
+  reconnect: true, // 自動重連
+  charset: "utf8mb4", // 支援中文
+};
+
+// 帶重試機制的連線函數
+const connectWithRetry = async (retries = 2) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      console.log(`嘗試連接資料庫... (第${i + 1}次)`);
+      const connection = await mysql.createConnection(dbConfig);
+      console.log("資料庫連接成功！");
+      return connection;
+    } catch (error) {
+      console.log(`連接失敗 (第${i + 1}次):`, error.message);
+      if (i === retries - 1) throw error;
+      // 等待1秒後重試
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+};
+
 // 根路徑
 app.get("/", (req, res) => {
   res.json({
     message: "Jessica的後端API正常運行！",
     timestamp: new Date().toISOString(),
-    projects_count: 6,
+    database_config: {
+      host: process.env.DB_HOST || "未設定",
+      user: process.env.DB_USER || "未設定",
+      database: process.env.DB_NAME || "未設定",
+    },
   });
 });
 
-// 使用你真實的專案資料（已按日期降序排列）
-app.get("/api/projects", (req, res) => {
-  const projects = [
-    {
-      id: 6,
-      title: "動態網站",
-      description: "用JQuery寫的動態網站。",
-      details:
-        "學會JavaScript的基本用法後，在學習用JQuery的函式庫寫的電影搜尋網站，API是外國網站的，限制每天只能使用100次，有模糊查詢跟精準查詢，缺點是因為是外國網站，搜尋只能用英文電影名。",
-      image:
-        "https://cdn.pixabay.com/photo/2022/12/16/16/28/drinking-cups-7660115_1280.jpg",
-      url: [{ url: "#", text: "電影搜尋器" }],
-      date: "2025-08-04",
-      year: 2025,
-    },
-    {
-      id: 4,
-      title: "靜態網站",
-      description: "第一次接觸前端網頁設計的成品。",
-      details: "第一次接觸html和css做出的一頁式網站。",
-      image:
-        "https://cdn.pixabay.com/photo/2025/08/15/07/25/ai-generated-9776380_1280.jpg",
-      url: [{ url: "#", text: "查看網站" }],
-      date: "2025-07-01",
-      year: 2025,
-    },
-    {
-      id: 5,
-      title: "WordPress架設網站",
-      description: "運用wordpress的佈景主題架設簡單的購物網站。",
-      details:
-        "學會並運用wordpress進行架設購物網站，該購物網站由朋友閒時興趣製作的水晶飾品作為商品，以及和朋友進行討論，如果要幫他製作一個網站，他會想要網站上面有什麼功能，所完成的示範性網站，尚未正式進行經營。",
-      image:
-        "https://cdn.pixabay.com/photo/2018/04/17/17/28/amethyst-3328161_1280.jpg",
-      url: [{ url: "#", text: "SweetDream網站" }],
-      date: "2025-06-27",
-      year: 2025,
-    },
-    {
-      id: 3,
-      title: "畢業專題發表",
-      description: "經營社群媒體，與組員一起溝通進行美術設計。",
-      details:
-        "和系上同學一起溝通合作，從4月開始開會，組織班上同學的重要活動-畢業專題發表，從主視覺的發想到輸出海報，再到12月的活動正式進行，以及順利落幕。",
-      image:
-        "https://scontent.ftpe15-1.fna.fbcdn.net/v/t39.30808-6/486967885_1068115448689175_474931874985778155_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=B47kKKsUW1wQ7kNvwHM8rpX&_nc_oc=AdlsXCfvrGX8IP0iMXPyQRTS_iwhoBJKQc0doJsI1O0kQXe9D5512LKieFsPwk-7T-4&_nc_zt=23&_nc_ht=scontent.ftpe15-1.fna&_nc_gid=7T-VwAp2g9HHbbeMjCiJ5g&oh=00_AfX7g77PAlZubwH7GflttR_LB57A-i2Q_1KuvYKXJjp2kw&oe=68BA1683",
-      url: [
-        { url: "#", text: "Instagram社群" },
-        { url: "#", text: "Facebook社群" },
-      ],
-      date: "2024-04-10",
-      year: 2024,
-    },
-    {
-      id: 2,
-      title: "大二系學會",
-      description: "系學會美宣組負責的事情。",
-      details:
-        "剛進系學會負責的第一個項目，設計新生手冊內容，以及經營社群網站，再到帶領大一一起為系學會活動進行美宣設計。",
-      image:
-        "https://cdn.pixabay.com/photo/2017/09/26/04/28/classroom-2787754_1280.jpg",
-      url: [{ url: "#", text: "新生手冊內頁" }],
-      date: "2022-06-12",
-      year: 2022,
-    },
-    {
-      id: 1,
-      title: "大一系學會",
-      description: "剛進系學會作為組員做的學術週活動。",
-      details:
-        "大一參加系學會美宣組，運用Canva製作學術週的海報，海報主題是流浪動物餐廳或咖啡廳，將學術組的內容刪減過後將想傳達給大眾的訊息放在上面做成海報，在學校大廳進行展示。",
-      image:
-        "https://cdn.pixabay.com/photo/2020/12/21/08/36/dog-5849152_1280.jpg",
-      url: [
-        { url: "#", text: "攜旺咖啡" },
-        { url: "#", text: "不老夢想125號" },
-        { url: "#", text: "台灣幸福狗流浪中途協會" },
-      ],
-      date: "2022-03-13",
-      year: 2022,
-    },
-  ];
+// 測試資料庫連線
+app.get("/api/test-db", async (req, res) => {
+  let connection;
+  try {
+    connection = await connectWithRetry();
 
-  // 已經手動按日期降序排列，最新的專案在前面
-  res.json(projects);
+    // 測試查詢
+    const [result] = await connection.execute("SELECT 1 as test");
+
+    res.json({
+      success: true,
+      message: "資料庫連線測試成功！",
+      result: result[0],
+    });
+  } catch (error) {
+    console.error("資料庫測試失敗:", error);
+    res.status(500).json({
+      success: false,
+      error: "資料庫連線失敗",
+      details: error.message,
+      code: error.code,
+    });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
 });
 
-// 健康檢查
-app.get("/health", (req, res) => {
-  res.json({
-    status: "healthy",
-    message: "Jessica的作品集API運行正常",
-    timestamp: new Date().toISOString(),
-  });
+// 真實專案API（優化版）
+app.get("/api/projects", async (req, res) => {
+  let connection;
+  try {
+    // 先嘗試資料庫連線
+    connection = await connectWithRetry();
+
+    const [rows] = await connection.execute(
+      "SELECT id, title, description, details, image, url, created_date FROM projects ORDER BY created_date DESC"
+    );
+
+    console.log(`成功取得 ${rows.length} 筆專案資料`);
+
+    // 處理資料
+    const projects = rows.map((row) => {
+      let urlArray = [];
+
+      // 處理URL欄位
+      if (row.url && typeof row.url === "string") {
+        // 如果包含HTML標籤，解析連結
+        if (row.url.includes("<")) {
+          const cheerio = require("cheerio");
+          const $ = cheerio.load(row.url);
+          const links = [];
+          $("a").each((i, element) => {
+            links.push({
+              url: $(element).attr("href"),
+              text: $(element).text(),
+            });
+          });
+          urlArray = links;
+        } else {
+          // 如果是純文字，按行分割
+          urlArray = row.url
+            .split(/[\r\n]+/)
+            .filter((line) => line.trim())
+            .map((line) => ({
+              url: "#",
+              text: line.trim(),
+            }));
+        }
+      }
+
+      // 格式化日期
+      let formattedDate = null;
+      if (row.created_date) {
+        if (typeof row.created_date === "string") {
+          formattedDate = row.created_date.split("T")[0];
+        } else {
+          formattedDate = row.created_date.toISOString().split("T")[0];
+        }
+      }
+
+      return {
+        id: row.id,
+        title: row.title,
+        description: row.description,
+        details: row.details,
+        image: row.image,
+        url: urlArray,
+        date: formattedDate,
+        year: row.created_date
+          ? new Date(row.created_date).getFullYear()
+          : new Date().getFullYear(),
+      };
+    });
+
+    res.json(projects);
+  } catch (error) {
+    console.error("資料庫查詢失敗，使用備用資料:", error);
+
+    // 如果資料庫失敗，回傳備用的測試資料
+    const backupProjects = [
+      {
+        id: 6,
+        title: "動態網站",
+        description: "用JQuery寫的動態網站。",
+        details:
+          "學會JavaScript的基本用法後，在學習用JQuery的函式庫寫的電影搜尋網站，API是外國網站的，限制每天只能使用100次，有模糊查詢跟精準查詢，缺點是因為是外國網站，搜尋只能用英文電影名。",
+        image:
+          "https://cdn.pixabay.com/photo/2022/12/16/16/28/drinking-cups-7660115_1280.jpg",
+        url: [{ url: "#", text: "電影搜尋器" }],
+        date: "2025-08-04",
+        year: 2025,
+      },
+      {
+        id: 4,
+        title: "靜態網站",
+        description: "第一次接觸前端網頁設計的成品。",
+        details: "第一次接觸html和css做出的一頁式網站。",
+        image:
+          "https://cdn.pixabay.com/photo/2025/08/15/07/25/ai-generated-9776380_1280.jpg",
+        url: [{ url: "#", text: "查看網站" }],
+        date: "2025-07-01",
+        year: 2025,
+      },
+      // 其他專案...
+    ];
+
+    res.json({
+      projects: backupProjects,
+      notice: "使用備用資料（資料庫連線問題）",
+      error: error.message,
+    });
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
+  }
 });
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`Jessica的作品集API運行在 port ${port}`);
-  console.log("載入了6個真實專案資料（按時間排序）");
+  console.log("準備測試真實資料庫連線...");
 });
 
 module.exports = app;
