@@ -19,7 +19,7 @@ const fakeProjects = [
     id: 1,
     title: "大一系學會",
     description: "剛進系學會作為組員做的學術週活動。",
-    url: '<a href="https://www.facebook.com/攜旺咖啡">攜旺咖啡</a><a href="https://www.facebook.com/不老夢想125號">不老夢想125號</a><a href="https://www.facebook.com/台灣幸福狗流浪中途協會">台灣幸福狗流浪中途協會</a>',
+    url: '<a href="https://www.canva.com/design/DAE6YTIvdV0/BofoPUjOhkuZTpv2tJnKFg/view?utm_content=DAE6YTIvdV0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h3fe554eff1">攜旺咖啡</a><a href="https://www.canva.com/design/DAE6u4Z8XkI/WjqEl3s5R3pANBuFkHcajA/view?utm_content=DAE6u4Z8XkI&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h9607d1e5c7">不老夢想125號</a><a href="https://www.canva.com/design/DAE6vElHrHo/wRDpUMZuMHoSGISFynN0rg/view?utm_content=DAE6vElHrHo&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h8f1743a243">台灣幸福狗流浪中途協會</a>',
     image:
       "https://cdn.pixabay.com/photo/2020/12/21/08/36/dog-5849152_1280.jpg",
     created_date: "2022-03-13",
@@ -30,7 +30,7 @@ const fakeProjects = [
     id: 2,
     title: "大二系學會",
     description: "系學會美宣組負責的事情。",
-    url: '<a href="https://drive.google.com/file/d/example/handbook">新生手冊內頁</a>',
+    url: '<a href="https://www.canva.com/design/DAFDXndoH4w/ILbmfu_VcaEHzoIjQ7x-YA/view?utm_content=DAFDXndoH4w&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hb0f2bb2873">新生手冊內頁</a>',
     image:
       "https://cdn.pixabay.com/photo/2017/09/26/04/28/classroom-2787754_1280.jpg",
     created_date: "2022-06-12",
@@ -41,18 +41,18 @@ const fakeProjects = [
     id: 3,
     title: "畢業專題發表",
     description: "經營社群媒體，與組員一起溝通進行美術設計。",
-    url: '<a href="https://www.instagram.com/graduation_project_2024">Instagram 社群</a><a href="https://www.facebook.com/graduation2024">Facebook 社群</a>',
+    url: '<a href="https://www.instagram.com/search__114/">ig社群連結</a><br / ><a href="https://www.facebook.com/NTCURSD113RP">fb社群連結</a><br />',
     image:
       "https://scontent.ftpe15-1.fna.fbcdn.net/v/t39.30808-6/486967885_1068115448689175_474931874985778155_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=B47kKKsUW1wQ7kNvwHM8rpX&_nc_oc=AdlsXCfvrGX8IP0iMXPyQRTS_iwhoBJKQc0doJsI1O0kQXe9D5512LKieFsPwk-7T-4&_nc_zt=23&_nc_ht=scontent.ftpe15-1.fna&_nc_gid=7T-VwAp2g9HHbbeMjCiJ5g&oh=00_AfX7g77PAlZubwH7GflttR_LB57A-i2Q_1KuvYKXJjp2kw&oe=68BA1683",
     created_date: "2024-04-10",
     details:
-      "和系上同學一起溝通合作，從4月開始開會，組織班上同學的重要活動-畢業專題發表，從主視覺的發想到輸出海報，再到12月的活動正式進行，以及順利落幕。",
+      "和系上同學一起溝通合作，從4月開始籌畫，組織班上同學的重要活動-畢業專題發表，從主視覺的發想到輸出海報，再到12月的活動正式進行，以及順利落幕。",
   },
   {
     id: 4,
     title: "靜態網站",
     description: "第一次接觸前端網頁設計的成品。",
-    url: '<a href="https://your-username.github.io/static-website">查看靜態網站</a><a href="https://github.com/your-username/static-website">GitHub 原始碼</a>',
+    url: '<a href="http://youridol.byethost15.com/">靜態網站</a>',
     image:
       "https://cdn.pixabay.com/photo/2025/08/15/07/25/ai-generated-9776380_1280.jpg",
     created_date: "2025-07-01",
@@ -63,7 +63,7 @@ const fakeProjects = [
     id: 5,
     title: "wordpress架設網站",
     description: "運用wordpress的佈景主題架設簡單的購物網站。",
-    url: '<a href="https://sweetdream-crystals.com">SweetDream 購物網站</a><a href="https://sweetdream-crystals.com/admin">後台管理</a>',
+    url: '<a href="https://selfpalette.idv.tw/" alt="水晶網站">SweetDream</a>',
     image:
       "https://cdn.pixabay.com/photo/2018/04/17/17/28/amethyst-3328161_1280.jpg",
     created_date: "2025-06-27",
@@ -74,7 +74,7 @@ const fakeProjects = [
     id: 6,
     title: "動態網站",
     description: "用JQuery寫的動態網站。",
-    url: '<a href="https://your-username.github.io/movie-search">電影搜尋器 Demo</a><a href="https://github.com/your-username/movie-search">GitHub 程式碼</a>',
+    url: '<a href="https://movieselect.selfpalette.idv.tw/" alt="JQuery網站">電影搜尋器</a>',
     image:
       "https://cdn.pixabay.com/photo/2022/12/16/16/28/drinking-cups-7660115_1280.jpg",
     created_date: "2025-08-04",
@@ -86,7 +86,7 @@ const fakeProjects = [
 // 根路徑 - API 狀態檢查
 app.get("/", (req, res) => {
   res.json({
-    message: "SelfPalette API 正常運行！",
+    message: "API 正常運行！",
     database: "selfpalette_projects",
     table: "projects",
     total_projects: fakeProjects.length,
@@ -213,14 +213,12 @@ app.get("/api/projects/:id", async (req, res) => {
 });
 
 //啟動伺服器
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
-  console.log(`🚀 SelfPalette API 運行在 port ${port}`);
-  console.log(`📊 專案數量: ${fakeProjects.length}`);
-  console.log(`🌐 測試網址: http://localhost:${port}`);
-  console.log(`📋 API 測試: http://localhost:${port}/api/projects`);
-  console.log(`🔗 所有 URL 都已更新為真實可點擊的連結`);
+  console.log(`API 運行在 port ${port}`);
+  console.log(`測試網址: http://localhost:${port}`);
+  console.log(`API 測試: http://localhost:${port}/api/projects`);
 });
 
 module.exports = app;
