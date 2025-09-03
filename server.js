@@ -7,7 +7,7 @@ const app = express();
 // 中間件設定
 app.use(
   cors({
-    origin: "https://intro.selfpalette.idv.tw/",
+    origin: "https://intro.selfpalette.idv.tw",
     credentials: true,
   })
 );
